@@ -4,14 +4,16 @@ var fn = require('../UsefulFunctions/functions');
 module.exports = function (router) {
 
   router.get('/', function (req, res, next) {
-
-    var query = Product.find({});
-    query.exec(function (err, products) {
+    const productsCallback = (err, products) => {
       if (err) return next(err);
-
-      res.status(200).render('product',{ 'products': products });
-    });
+      res.status(200).json({ 'products': products });
+    };
+    const query = Product.find({});
+    query.exec()
+      .then(productsCallback)
+      .catch(next);
   });//fin de GET
+
 
   router.post('/', function (req, res,next) {
     const _product = req.body;// {} if an error occurred
